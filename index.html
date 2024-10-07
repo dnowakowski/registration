@@ -45,16 +45,53 @@
         button:hover {
             background-color: #45a049;
         }
+
+        #message {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+            display: none;
+        }
     </style>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Zapobiega standardowemu przesłaniu formularza
+            
+            // Pobiera dane z formularza
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Tworzy dane do wysłania
+            const data = new URLSearchParams();
+            data.append('email', email);
+            data.append('password', password);
+
+            // Wysyła dane do Google Apps Script
+            fetch('URL_TWOJEGO_SKRYPTU', {
+                method: 'POST',
+                body: data
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Ukrywa formularz i wyświetla komunikat "Dziękuję za rejestrację!"
+                document.querySelector('form').style.display = 'none';
+                document.getElementById('message').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Zapraszam do rejestracji na nowe szkolenie</h2>
-        <form>
-            <input type="email" placeholder="Podaj adres e-mail" required><br>
-            <input type="password" placeholder="Hasło" required><br>
+        <form onsubmit="submitForm(event)">
+            <input type="email" id="email" placeholder="Podaj adres e-mail" required><br>
+            <input type="password" id="password" placeholder="Hasło" required><br>
             <button type="submit">Zarejestruj się</button>
         </form>
+        <div id="message">Dziękuje za rejestrację!</div>
     </div>
 </body>
 </html>
